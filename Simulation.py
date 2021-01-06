@@ -1,6 +1,7 @@
 import numpy as np
 import math as m
 import random as r
+import matplotlib.pyplot as plt
 
 class Particle:
     def __init__(self, coord, velocity, mass, L): #задаются координаты частицы, ее скорость, масса и ограничение на перемещение
@@ -28,36 +29,45 @@ class Particle:
     def Move(self, delta_x): #перемещение частицы на заданный вектор
         new_coord = self.coord + np.array(delta_x)
         for e in range(3):
-            if new_coord[e] > self.L:
+            if new_coord[e] > 10:
                 new_coord[e] -= self.L
             if new_coord[e] < 0:
                 new_coord[e] += self.L
         self.coord = new_coord
 
-L = 2 #длина стороны куба, в котором находятся частицы
+L = 10 #длина стороны куба, в котором находятся частицы
 N = 2 #число частиц N^3 = 8
-k_B = 1.38e-23 #постоянная Больцмана
+k_B = 1380 #постоянная Больцмана
 T = 300 #температура
-mass = 4.67e-26 #масса частицы (масса молекулы азота)
-av = m.sqrt(3*k_B*T/mass) #средняя скорость частиц при заданной температуре (из распределения Максвелла)
+mass = 5 #масса частицы (масса молекулы азота)
+av = 1
+#av = m.sqrt(3*k_B*T/mass) #средняя скорость частиц при заданной температуре (из распределения Максвелла)
 Gas=[] #создаем список из элементов класса Particle
 for i in range(N):
     for j in range(N):
         for k in range(N):
-            Gas.append(Particle([float(i),float(j),float(k)],[float(r.gauss(av,av/m.sqrt(3))),float(r.gauss(av,av/m.sqrt(3))),float(r.gauss(av,av/m.sqrt(3)))], mass, L))
-"""
-for i in range(len(Gas)): Скорости получаются порядка 500 м/c, что примерно соответствует реальности
+            Gas.append(Particle([float(5*i+2.5),float(5*j+2.5),float(5*k+2.5)],[float(r.gauss(av,av/m.sqrt(3))),float(r.gauss(av,av/m.sqrt(3))),float(r.gauss(av,av/m.sqrt(3)))], mass, L))
+
+for i in range(len(Gas)): #Скорости получаются порядка 500 м/c, что примерно соответствует реальности
     print(Gas[i].velocity)
-"""        
-for t in range (1):
-    for PARTICLE in Gas: #проходим по всем частицам из списка
+
+plt.ion()
+for t in range (700):
+    plt.clf()
+    for PARTICLES in Gas: #проходим по всем частицам из списка
+        plt.scatter(PARTICLES.coord[0], PARTICLES.coord[1])
+        plt.axis([0, 10, 0, 10])
         w = np.zeros(3) #здесь будут складываться ускорения
-        v = PARTICLE.velocity #начальная скорость
+        #v = PARTICLES.velocity #начальная скорость
         for particle in Gas: #проходим по всем ДРУГИМ частицам из списка
-            if PARTICLE != particle:
-                w += PARTICLE.VectorAcceleration(particle) #добавляем ускорение от силы взаимодействия с текущей частицей
-        v += w*0.05 #изменяем скорость
-        PARTICLE.Move(v*0.05) #двигаем частицу
+            if PARTICLES != particle:
+                w += PARTICLES.VectorAcceleration(particle) #добавляем ускорение от силы взаимодействия с текущей частицей
+        #v += w*0.005 #изменяем скорость
+        PARTICLES.velocity += w*0.05
+        PARTICLES.Move(PARTICLES.velocity*0.025) #двигаем частицу
+    plt.draw()
+    plt.pause(0.01)
+plt.ioff()
+plt.show()
 for i in range(len(Gas)):
     print(Gas[i].coord)
-
