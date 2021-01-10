@@ -21,7 +21,7 @@ class Particle:
         return delta
     def Force(self, other): #сила взаимодействия между двумя частицами
         r = self.Distance(other)
-        return -r**(-7)*(2*r**(-6)-1) #используем потенциал Леннарда-Джонса
+        return -24*r**(-7)*(2*r**(-6)-1) #используем потенциал Леннарда-Джонса
     def VectorForce(self, other): #координаты вектора силы взаимодействия между двумя частицами
         return self.Force(other)/self.Distance(other)*self.VectorDistance(other)
     def Acceleration(self, other): #ускорение, приобретаемое частицей под действием такой силы
