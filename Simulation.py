@@ -70,12 +70,13 @@ for step in range (200):
         #plt.axis([0, L, 0, L])
         PARTICLES.Move(PARTICLES.velocity*t + PARTICLES.w*t**2/2) #двигаем частицу
         tmp = PARTICLES.w
+        PARTICLES.w = np.zeros(3)
         for particle in Gas: #проходим по всем ДРУГИМ частицам из списка
             if PARTICLES != particle:
                 PARTICLES.w += PARTICLES.VectorAcceleration(particle) #добавляем ускорение от силы взаимодействия с текущей частицей
         PARTICLES.velocity += (tmp+PARTICLES.w)*t/2
-   # plt.draw()
-   # plt.pause(0.001)
+    #plt.draw()
+    #plt.pause(0.001)
 #plt.ioff()
 #plt.show()
 
